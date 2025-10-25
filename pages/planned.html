@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planned - MyDay</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>MyDay Web</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    My Day
+                </a>
+                <a href="important.html" class="nav-item">
+                    <i class="far fa-star"></i>
+                    Important
+                </a>
+                <a href="planned.html" class="nav-item active">
+                    <i class="far fa-calendar"></i>
+                    Planned
+                </a>
+                <a href="all-tasks.html" class="nav-item">
+                    <i class="fas fa-check"></i>
+                    All Tasks
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="header-left">
+                    <div class="header-icon planned">
+                        <i class="far fa-calendar"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2>Planned</h2>
+                        <p id="planned-count">9 tasks scheduled</p>
+                    </div>
+                </div>
+                <button class="add-task-btn" id="addTaskBtn">
+                    <i class="fas fa-plus"></i>
+                    Add Task
+                </button>
+            </header>
+
+            <!-- Tasks Section -->
+            <section class="tasks-section" id="tasksContainer">
+                <!-- Tasks will be dynamically rendered here -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div class="modal" id="addTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Task</h2>
+                <p>Create a new task with details like priority, tags, and due date</p>
+            </div>
+            
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Title *</label>
+                    <input type="text" id="taskTitle" placeholder="What do you want to do?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" placeholder="Add more details..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDueDate">Due Date</label>
+                    <input type="date" id="taskDueDate">
+                </div>
+                
+                <div class="form-group">
+                    <label>Priority</label>
+                    <div class="priority-options">
+                        <div class="priority-option" data-priority="low">Low</div>
+                        <div class="priority-option" data-priority="medium">Medium</div>
+                        <div class="priority-option" data-priority="high">High</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskTags">Tags</label>
+                    <input type="text" id="taskTags" placeholder="Add tags separated by commas...">
+                    <div class="tags-container" id="tagsContainer"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskStatus">Status</label>
+                    <select id="taskStatus">
+                        <option value="todo">To Do</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-add">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>

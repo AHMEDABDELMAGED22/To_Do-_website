@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tasks - MyDay</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>MyDay</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-sun"></i>
+                    My Day
+                </a>
+                <a href="important.html" class="nav-item">
+                    <i class="fas fa-star"></i>
+                    Important
+                </a>
+                <a href="planned.html" class="nav-item">
+                    <i class="fas fa-calendar"></i>
+                    Planned
+                </a>
+                <a href="all-tasks.html" class="nav-item active">
+                    <i class="fas fa-check"></i>
+                    All Tasks
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="header-left">
+                    <div class="header-icon all-tasks">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2>All Tasks</h2>
+                        <p>All your tasks in one place</p>
+                    </div>
+                </div>
+                <button class="add-task-btn" id="addTaskBtn">
+                    <i class="fas fa-plus"></i>
+                    Add Task
+                </button>
+            </header>
+
+            <!-- Progress Section -->
+            <section class="progress-section">
+                <h3 class="progress-title">Overall Progress</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 of 0 completed</div>
+            </section>
+
+            <!-- Simple Filter Section -->
+            <section class="simple-filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All</button>
+                    <button class="filter-tab" data-filter="work">Work</button>
+                    <button class="filter-tab" data-filter="personal">Personal</button>
+                </div>
+            </section>
+
+            <!-- Tasks Section -->
+            <section class="tasks-section" id="tasksContainer">
+                <!-- Tasks will be dynamically rendered here -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div class="modal" id="addTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Task</h2>
+                <p>Create a new task with details like priority, tags, and due date</p>
+            </div>
+            
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Title *</label>
+                    <input type="text" id="taskTitle" placeholder="What do you want to do?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" placeholder="Add more details..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskCategory">Category</label>
+                    <select id="taskCategory">
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDueDate">Due Date</label>
+                    <input type="text" id="taskDueDate" placeholder="e.g., Today, Oct 6, Tomorrow">
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-add">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../all-tasks-simple.js"></script>
+</body>
+</html>
