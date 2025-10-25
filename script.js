@@ -1,5 +1,3 @@
-// ===== Simplified Task Manager =====
-
 class TaskManager {
     constructor() {
         this.tasks = this.loadTasks();
@@ -17,7 +15,6 @@ class TaskManager {
         this.updateCounts();
     }
 
-    // === PAGE DETECTION ===
     getCurrentPage() {
         const path = window.location.pathname;
         if (path.includes('all-tasks')) return 'all-tasks';
@@ -26,7 +23,6 @@ class TaskManager {
         return 'my-day';
     }
 
-    // === DATE UPDATE ===
     updateCurrentDate() {
         const dateElement = document.getElementById('current-date');
         if (dateElement) {
@@ -36,14 +32,12 @@ class TaskManager {
         }
     }
 
-    // === LOAD TASKS FROM STORAGE ===
     loadTasks() {
         const savedTasks = localStorage.getItem('mydayTasks');
         if (savedTasks) {
             return JSON.parse(savedTasks);
         }
         
-        // Default sample tasks
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
@@ -108,12 +102,10 @@ class TaskManager {
         ];
     }
 
-    // === SAVE TASKS ===
     saveTasks() {
         localStorage.setItem('mydayTasks', JSON.stringify(this.tasks));
     }
 
-    // === ADD NEW TASK ===
     addTask(taskData) {
         const newTask = {
             id: Date.now(),
@@ -132,7 +124,6 @@ class TaskManager {
         this.updateCounts();
     }
 
-    // === DELETE TASK ===
     deleteTask(taskId) {
         this.tasks = this.tasks.filter(task => task.id !== taskId);
         this.saveTasks();
@@ -141,7 +132,6 @@ class TaskManager {
         this.updateCounts();
     }
 
-    // === TOGGLE TASK COMPLETION ===
     toggleTaskStatus(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
@@ -152,7 +142,6 @@ class TaskManager {
         }
     }
 
-    // === TOGGLE IMPORTANT ===
     toggleImportant(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
@@ -164,7 +153,6 @@ class TaskManager {
         }
     }
 
-    // === GET FILTERED TASKS ===
     getFilteredTasks() {
         let filteredTasks = [...this.tasks];
 
@@ -180,7 +168,6 @@ class TaskManager {
         return filteredTasks;
     }
 
-    // === RENDER TASKS ===
     renderTasks() {
         const tasksContainer = document.getElementById('tasksContainer');
         if (!tasksContainer) return;
@@ -199,18 +186,15 @@ class TaskManager {
             return;
         }
 
-        // Render planned tasks with date groups
         if (this.currentPage === 'planned') {
             this.renderPlannedTasks(filteredTasks, tasksContainer);
         } else {
-            // Render normal tasks
             filteredTasks.forEach(task => {
                 tasksContainer.appendChild(this.createTaskElement(task));
             });
         }
     }
 
-    // === RENDER PLANNED TASKS WITH DATE GROUPS ===
     renderPlannedTasks(tasks, container) {
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];
@@ -246,7 +230,6 @@ class TaskManager {
         this.renderDateGroup(container, 'this-week', 'This Week', groups.thisWeek);
     }
 
-    // === RENDER DATE GROUP ===
     renderDateGroup(container, className, title, tasks) {
         if (tasks.length === 0) return;
 
@@ -266,7 +249,6 @@ class TaskManager {
         container.appendChild(groupDiv);
     }
 
-    // === CREATE TASK ELEMENT ===
     createTaskElement(task) {
         const taskDiv = document.createElement('div');
         taskDiv.className = `task-card ${task.status === 'done' ? 'completed' : ''}`;
@@ -295,7 +277,6 @@ class TaskManager {
         return taskDiv;
     }
 
-    // === FORMAT DUE DATE ===
     formatDueDate(dueDate) {
         if (!dueDate) return 'No date';
         
@@ -309,7 +290,6 @@ class TaskManager {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
-    // === UPDATE PROGRESS BAR ===
     updateProgress() {
         const filteredTasks = this.getFilteredTasks();
         const completedTasks = filteredTasks.filter(task => task.status === 'done');
@@ -325,16 +305,13 @@ class TaskManager {
         }
     }
 
-    // === UPDATE PAGE COUNTS ===
     updateCounts() {
-        // Important count
         const importantCount = document.getElementById('important-count');
         if (importantCount) {
             const count = this.tasks.filter(task => task.isImportant).length;
             importantCount.textContent = `${count} task${count !== 1 ? 's' : ''} starred`;
         }
 
-        // Planned count
         const plannedCount = document.getElementById('planned-count');
         if (plannedCount) {
             const count = this.tasks.filter(task => task.dueDate).length;
@@ -342,16 +319,13 @@ class TaskManager {
         }
     }
 
-    // === SETUP EVENT LISTENERS ===
     setupEventListeners() {
-        // Checkbox events
         document.addEventListener('change', (e) => {
             if (e.target.classList.contains('task-checkbox')) {
                 this.toggleTaskStatus(parseInt(e.target.dataset.taskId));
             }
         });
 
-        // Star and delete button events
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('task-star')) {
                 this.toggleImportant(parseInt(e.target.dataset.taskId));
@@ -363,7 +337,6 @@ class TaskManager {
             }
         });
 
-        // Filter tabs (for All Tasks page)
         document.querySelectorAll('.filter-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -384,7 +357,6 @@ class TaskManager {
         });
     }
 
-    // === SETUP MODAL ===
     setupModal() {
         const modal = document.getElementById('addTaskModal');
         const addTaskBtn = document.getElementById('addTaskBtn');
@@ -393,14 +365,12 @@ class TaskManager {
 
         if (!modal || !addTaskBtn) return;
 
-        // Open modal
         addTaskBtn.addEventListener('click', () => {
             modal.style.display = 'flex';
             const dateInput = document.getElementById('taskDueDate');
             if (dateInput) dateInput.valueAsDate = new Date();
         });
 
-        // Close modal
         if (cancelBtn) {
             cancelBtn.addEventListener('click', () => {
                 modal.style.display = 'none';
@@ -409,7 +379,6 @@ class TaskManager {
             });
         }
 
-        // Close on outside click
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -418,7 +387,6 @@ class TaskManager {
             }
         });
 
-        // Priority selection
         document.querySelectorAll('.priority-option').forEach(option => {
             option.addEventListener('click', () => {
                 document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
@@ -427,7 +395,6 @@ class TaskManager {
             });
         });
 
-        // Form submission
         if (form) {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -451,7 +418,6 @@ class TaskManager {
     }
 }
 
-// === INITIALIZE APP ===
 document.addEventListener('DOMContentLoaded', () => {
     window.taskManager = new TaskManager();
 });
