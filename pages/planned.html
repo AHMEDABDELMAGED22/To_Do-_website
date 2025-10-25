@@ -14,18 +14,17 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1>MyDay Web</h1>
-            </div>
-            <nav class="sidebar-nav">
+                <nav class="sidebar-nav">
                 <a href="../index.html" class="nav-item">
                     <i class="fas fa-home"></i>
                     My Day
                 </a>
                 <a href="important.html" class="nav-item">
-                    <i class="far fa-star"></i>
+                    <i class="fas fa-star"></i>
                     Important
                 </a>
                 <a href="planned.html" class="nav-item active">
-                    <i class="far fa-calendar"></i>
+                    <i class="fas fa-calendar"></i>
                     Planned
                 </a>
                 <a href="all-tasks.html" class="nav-item">
@@ -41,7 +40,7 @@
             <header class="page-header">
                 <div class="header-left">
                     <div class="header-icon planned">
-                        <i class="far fa-calendar"></i>
+                        <img src = "../imgs/planned.png">
                     </div>
                     <div class="header-text">
                         <h2>Planned</h2>
@@ -84,6 +83,14 @@
                     <label for="taskDueDate">Due Date</label>
                     <input type="date" id="taskDueDate">
                 </div>
+
+                <div class="form-group">
+    <label for="taskCategory">Category</label>
+    <select id="taskCategory">
+        <option value="work">Work</option>
+        <option value="personal">Personal</option>
+    </select>
+</div>
                 
                 <div class="form-group">
                     <label>Priority</label>
