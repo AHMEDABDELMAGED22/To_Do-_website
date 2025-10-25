@@ -1,4 +1,3 @@
-// Task Management System
 class TaskManager {
     constructor() {
         this.tasks = this.loadTasks();
@@ -298,7 +297,7 @@ class TaskManager {
     updatePlannedCount() {
         const countElement = document.getElementById('planned-count');
         if (countElement) {
-            const plannedCount = this.tasks.filter(task => task.dueDate).length;
+            const plannedCount = this.C.filter(task => task.dueDate).length;
             countElement.textContent = `${plannedCount} task${plannedCount !== 1 ? 's' : ''} scheduled`;
         }
     }

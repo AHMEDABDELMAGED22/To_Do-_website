@@ -603,16 +603,6 @@ body {
     text-align: center;
 }
 
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: 8px; }
-.mb-2 { margin-bottom: 16px; }
-.mb-3 { margin-bottom: 24px; }
-
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: 8px; }
-.mt-2 { margin-top: 16px; }
-.mt-3 { margin-top: 24px; }
-
 /* Planned Page Styles */
 .date-group {
     margin-bottom: 32px;
@@ -665,7 +655,7 @@ body {
 }
 
 .date-group.tomorrow .date-group-count {
-    background: #fff3e6;
+    background: #786d62;
     color: #FF9500;
 }
 
