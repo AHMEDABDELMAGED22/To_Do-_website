@@ -1,41 +1,45 @@
 class TaskManager {
     constructor() {
-        this.tasks = this.loadTasks();
-        this.currentPage = this.getCurrentPage();
-        this.selectedPriority = 'medium';
-        this.init();
+        this.tasks = this.getTasks();
+        this.page = this.getPage();
+        this.priority = 'medium';
+        this.start();
     }
 
-    init() {
-        this.updateCurrentDate();
-        this.renderTasks();
-        this.updateProgress();
-        this.setupEventListeners();
-        this.setupModal();
-        this.updateCounts();
+    start() {
+        this.showDate();
+        this.showTasks();
+        this.showProgress();
+        this.addListeners();
+        this.modalSetup();
+        this.counts();
     }
 
-    getCurrentPage() {
-        const path = window.location.pathname;
-        if (path.includes('all-tasks')) return 'all-tasks';
-        if (path.includes('important')) return 'important';
-        if (path.includes('planned')) return 'planned';
+    getPage() {
+        const url = window.location.pathname;
+        if (url.includes('all-tasks')) return 'all-tasks';
+        if (url.includes('important')) return 'important';
+        if (url.includes('planned')) return 'planned';
         return 'my-day';
     }
 
-    updateCurrentDate() {
-        const dateElement = document.getElementById('current-date');
-        if (dateElement) {
+    showDate() {
+        const elem = document.getElementById('current-date');
+        if (elem) {
             const today = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            dateElement.textContent = today.toLocaleDateString('en-US', options);
+            elem.textContent = today.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
         }
     }
 
-    loadTasks() {
-        const savedTasks = localStorage.getItem('mydayTasks');
-        if (savedTasks) {
-            return JSON.parse(savedTasks);
+    getTasks() {
+        const saved = localStorage.getItem('mydayTasks');
+        if (saved) {
+            return JSON.parse(saved);
         }
         
         const today = new Date();
@@ -52,7 +56,7 @@ class TaskManager {
                 priority: 'high',
                 category: 'work',
                 status: 'todo',
-                isImportant: true
+                important: true
             },
             {
                 id: 2,
@@ -61,7 +65,7 @@ class TaskManager {
                 priority: 'high',
                 category: 'work',
                 status: 'todo',
-                isImportant: true
+                important: true
             },
             {
                 id: 3,
@@ -70,7 +74,7 @@ class TaskManager {
                 priority: 'medium',
                 category: 'personal',
                 status: 'todo',
-                isImportant: true
+                important: true
             },
             {
                 id: 4,
@@ -79,7 +83,7 @@ class TaskManager {
                 priority: 'high',
                 category: 'work',
                 status: 'todo',
-                isImportant: true
+                important: true
             },
             {
                 id: 5,
@@ -88,7 +92,7 @@ class TaskManager {
                 priority: 'medium',
                 category: 'work',
                 status: 'todo',
-                isImportant: false
+                important: false
             },
             {
                 id: 6,
@@ -97,86 +101,86 @@ class TaskManager {
                 priority: 'medium',
                 category: 'work',
                 status: 'todo',
-                isImportant: false
+                important: false
             }
         ];
     }
 
-    saveTasks() {
+    save() {
         localStorage.setItem('mydayTasks', JSON.stringify(this.tasks));
     }
 
-    addTask(taskData) {
-        const newTask = {
+    add(data) {
+        const task = {
             id: Date.now(),
-            title: taskData.title,
-            dueDate: taskData.dueDate || '',
-            priority: taskData.priority || 'medium',
-            category: taskData.category || 'work',
+            title: data.title,
+            dueDate: data.dueDate || '',
+            priority: data.priority || 'medium',
+            category: data.category || 'work',
             status: 'todo',
-            isImportant: false
+            important: false
         };
         
-        this.tasks.push(newTask);
-        this.saveTasks();
-        this.renderTasks();
-        this.updateProgress();
-        this.updateCounts();
+        this.tasks.push(task);
+        this.save();
+        this.showTasks();
+        this.showProgress();
+        this.counts();
     }
 
-    deleteTask(taskId) {
-        this.tasks = this.tasks.filter(task => task.id !== taskId);
-        this.saveTasks();
-        this.renderTasks();
-        this.updateProgress();
-        this.updateCounts();
+    remove(id) {
+        this.tasks = this.tasks.filter(task => task.id !== id);
+        this.save();
+        this.showTasks();
+        this.showProgress();
+        this.counts();
     }
 
-    toggleTaskStatus(taskId) {
-        const task = this.tasks.find(t => t.id === taskId);
+    check(id) {
+        const task = this.tasks.find(t => t.id === id);
         if (task) {
             task.status = task.status === 'done' ? 'todo' : 'done';
-            this.saveTasks();
-            this.renderTasks();
-            this.updateProgress();
+            this.save();
+            this.showTasks();
+            this.showProgress();
         }
     }
 
-    toggleImportant(taskId) {
-        const task = this.tasks.find(t => t.id === taskId);
+    star(id) {
+        const task = this.tasks.find(t => t.id === id);
         if (task) {
-            task.isImportant = !task.isImportant;
-            this.saveTasks();
-            this.renderTasks();
-            this.updateProgress();
-            this.updateCounts();
+            task.important = !task.important;
+            this.save();
+            this.showTasks();
+            this.showProgress();
+            this.counts();
         }
     }
 
-    getFilteredTasks() {
-        let filteredTasks = [...this.tasks];
+    filter() {
+        let result = [...this.tasks];
 
-        if (this.currentPage === 'important') {
-            filteredTasks = filteredTasks.filter(task => task.isImportant);
-        } else if (this.currentPage === 'my-day') {
+        if (this.page === 'important') {
+            result = result.filter(task => task.important);
+        } else if (this.page === 'my-day') {
             const today = new Date().toISOString().split('T')[0];
-            filteredTasks = filteredTasks.filter(task => task.dueDate === today);
-        } else if (this.currentPage === 'planned') {
-            filteredTasks = filteredTasks.filter(task => task.dueDate);
+            result = result.filter(task => task.dueDate === today);
+        } else if (this.page === 'planned') {
+            result = result.filter(task => task.dueDate);
         }
 
-        return filteredTasks;
+        return result;
     }
 
-    renderTasks() {
-        const tasksContainer = document.getElementById('tasksContainer');
-        if (!tasksContainer) return;
+    showTasks() {
+        const container = document.getElementById('tasksContainer');
+        if (!container) return;
 
-        const filteredTasks = this.getFilteredTasks();
-        tasksContainer.innerHTML = '';
+        const list = this.filter();
+        container.innerHTML = '';
 
-        if (filteredTasks.length === 0) {
-            tasksContainer.innerHTML = `
+        if (list.length === 0) {
+            container.innerHTML = `
                 <div style="padding: 40px; text-align: center; color: #999;">
                     <i class="fas fa-tasks" style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
                     <h3>No tasks found</h3>
@@ -186,16 +190,16 @@ class TaskManager {
             return;
         }
 
-        if (this.currentPage === 'planned') {
-            this.renderPlannedTasks(filteredTasks, tasksContainer);
+        if (this.page === 'planned') {
+            this.groupByDate(list, container);
         } else {
-            filteredTasks.forEach(task => {
-                tasksContainer.appendChild(this.createTaskElement(task));
+            list.forEach(task => {
+                container.appendChild(this.makeTask(task));
             });
         }
     }
 
-    renderPlannedTasks(tasks, container) {
+    groupByDate(list, container) {
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];
         
@@ -207,10 +211,10 @@ class TaskManager {
             overdue: [],
             today: [],
             tomorrow: [],
-            thisWeek: []
+            week: []
         };
 
-        tasks.forEach(task => {
+        list.forEach(task => {
             if (!task.dueDate) return;
 
             if (task.dueDate < todayStr) {
@@ -220,47 +224,47 @@ class TaskManager {
             } else if (task.dueDate === tomorrowStr) {
                 groups.tomorrow.push(task);
             } else {
-                groups.thisWeek.push(task);
+                groups.week.push(task);
             }
         });
 
-        this.renderDateGroup(container, 'overdue', 'Overdue', groups.overdue);
-        this.renderDateGroup(container, 'today', 'Today', groups.today);
-        this.renderDateGroup(container, 'tomorrow', 'Tomorrow', groups.tomorrow);
-        this.renderDateGroup(container, 'this-week', 'This Week', groups.thisWeek);
+        this.makeGroup(container, 'overdue', 'Overdue', groups.overdue);
+        this.makeGroup(container, 'today', 'Today', groups.today);
+        this.makeGroup(container, 'tomorrow', 'Tomorrow', groups.tomorrow);
+        this.makeGroup(container, 'this-week', 'This Week', groups.week);
     }
 
-    renderDateGroup(container, className, title, tasks) {
-        if (tasks.length === 0) return;
+    makeGroup(container, cls, title, list) {
+        if (list.length === 0) return;
 
-        const groupDiv = document.createElement('div');
-        groupDiv.className = `date-group ${className}`;
-        groupDiv.innerHTML = `
+        const div = document.createElement('div');
+        div.className = `date-group ${cls}`;
+        div.innerHTML = `
             <div class="date-group-header">
                 <div class="date-group-title">${title}</div>
-                <div class="date-group-count">${tasks.length} task${tasks.length !== 1 ? 's' : ''}</div>
+                <div class="date-group-count">${list.length} task${list.length !== 1 ? 's' : ''}</div>
             </div>
         `;
 
-        tasks.forEach(task => {
-            groupDiv.appendChild(this.createTaskElement(task));
+        list.forEach(task => {
+            div.appendChild(this.makeTask(task));
         });
 
-        container.appendChild(groupDiv);
+        container.appendChild(div);
     }
 
-    createTaskElement(task) {
-        const taskDiv = document.createElement('div');
-        taskDiv.className = `task-card ${task.status === 'done' ? 'completed' : ''}`;
+    makeTask(task) {
+        const div = document.createElement('div');
+        div.className = `task-card ${task.status === 'done' ? 'completed' : ''}`;
         
-        const starClass = task.isImportant ? 'fas fa-star' : 'far fa-star';
+        const star = task.important ? 'fas fa-star' : 'far fa-star';
         
-        taskDiv.innerHTML = `
+        div.innerHTML = `
             <div class="task-header">
                 <input type="checkbox" class="task-checkbox" ${task.status === 'done' ? 'checked' : ''} data-task-id="${task.id}">
                 <div class="task-title ${task.status === 'done' ? 'completed' : ''}">${task.title}</div>
                 <div class="task-actions">
-                    <i class="${starClass} task-star" data-task-id="${task.id}"></i>
+                    <i class="${star} task-star" data-task-id="${task.id}"></i>
                     <i class="fas fa-trash task-delete" data-task-id="${task.id}"></i>
                 </div>
             </div>
@@ -269,70 +273,70 @@ class TaskManager {
                 <span class="task-priority ${task.priority}">${task.priority.toUpperCase()}</span>
                 <span class="task-due-date">
                     <i class="fas fa-calendar"></i>
-                    ${this.formatDueDate(task.dueDate)}
+                    ${this.dateText(task.dueDate)}
                 </span>
             </div>
         `;
 
-        return taskDiv;
+        return div;
     }
 
-    formatDueDate(dueDate) {
-        if (!dueDate) return 'No date';
+    dateText(date) {
+        if (!date) return 'No date';
         
         const today = new Date().toISOString().split('T')[0];
         const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         
-        if (dueDate === today) return 'Today';
-        if (dueDate === tomorrow) return 'Tomorrow';
+        if (date === today) return 'Today';
+        if (date === tomorrow) return 'Tomorrow';
         
-        const date = new Date(dueDate);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const d = new Date(date);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
-    updateProgress() {
-        const filteredTasks = this.getFilteredTasks();
-        const completedTasks = filteredTasks.filter(task => task.status === 'done');
-        const totalTasks = filteredTasks.length;
+    showProgress() {
+        const list = this.filter();
+        const done = list.filter(task => task.status === 'done');
+        const total = list.length;
         
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
+        const bar = document.getElementById('progressBar');
+        const text = document.getElementById('progressText');
         
-        if (progressBar && progressText) {
-            const percentage = totalTasks > 0 ? (completedTasks.length / totalTasks) * 100 : 0;
-            progressBar.style.width = `${percentage}%`;
-            progressText.textContent = `${completedTasks.length} of ${totalTasks} completed`;
+        if (bar && text) {
+            const percent = total > 0 ? (done.length / total) * 100 : 0;
+            bar.style.width = `${percent}%`;
+            text.textContent = `${done.length} of ${total} completed`;
         }
     }
 
-    updateCounts() {
-        const importantCount = document.getElementById('important-count');
-        if (importantCount) {
-            const count = this.tasks.filter(task => task.isImportant).length;
-            importantCount.textContent = `${count} task${count !== 1 ? 's' : ''} starred`;
+    counts() {
+        const impCount = document.getElementById('important-count');
+        if (impCount) {
+            const num = this.tasks.filter(task => task.important).length;
+            impCount.textContent = `${num} task${num !== 1 ? 's' : ''} starred`;
         }
 
-        const plannedCount = document.getElementById('planned-count');
-        if (plannedCount) {
-            const count = this.tasks.filter(task => task.dueDate).length;
-            plannedCount.textContent = `${count} task${count !== 1 ? 's' : ''} scheduled`;
+        const planCount = document.getElementById('planned-count');
+        if (planCount) {
+            const num = this.tasks.filter(task => task.dueDate).length;
+            planCount.textContent = `${num} task${num !== 1 ? 's' : ''} scheduled`;
         }
     }
 
-    setupEventListeners() {
+    addListeners() {
         document.addEventListener('change', (e) => {
             if (e.target.classList.contains('task-checkbox')) {
-                this.toggleTaskStatus(parseInt(e.target.dataset.taskId));
+                this.check(parseInt(e.target.dataset.taskId));
             }
         });
 
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('task-star')) {
-                this.toggleImportant(parseInt(e.target.dataset.taskId));
+                this.star(parseInt(e.target.dataset.taskId));
             }
             if (e.target.classList.contains('task-delete')) {
                 if (confirm('Are you sure you want to delete this task?')) {
-                    this.deleteTask(parseInt(e.target.dataset.taskId));
+                    this.remove(parseInt(e.target.dataset.taskId));
                 }
             }
         });
@@ -342,40 +346,38 @@ class TaskManager {
                 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 
-                const filter = tab.dataset.filter;
-                const filteredTasks = filter === 'all' 
-                    ? this.tasks 
-                    : this.tasks.filter(task => task.category === filter);
+                const f = tab.dataset.filter;
+                const list = f === 'all' ? this.tasks : this.tasks.filter(task => task.category === f);
                 
-                const tasksContainer = document.getElementById('tasksContainer');
-                tasksContainer.innerHTML = '';
-                filteredTasks.forEach(task => {
-                    tasksContainer.appendChild(this.createTaskElement(task));
+                const container = document.getElementById('tasksContainer');
+                container.innerHTML = '';
+                list.forEach(task => {
+                    container.appendChild(this.makeTask(task));
                 });
-                this.updateProgress();
+                this.showProgress();
             });
         });
     }
 
-    setupModal() {
+    modalSetup() {
         const modal = document.getElementById('addTaskModal');
-        const addTaskBtn = document.getElementById('addTaskBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
+        const btn = document.getElementById('addTaskBtn');
+        const cancel = document.getElementById('cancelBtn');
         const form = document.getElementById('taskForm');
 
-        if (!modal || !addTaskBtn) return;
+        if (!modal || !btn) return;
 
-        addTaskBtn.addEventListener('click', () => {
+        btn.addEventListener('click', () => {
             modal.style.display = 'flex';
-            const dateInput = document.getElementById('taskDueDate');
-            if (dateInput) dateInput.valueAsDate = new Date();
+            const date = document.getElementById('taskDueDate');
+            if (date) date.valueAsDate = new Date();
         });
 
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
+        if (cancel) {
+            cancel.addEventListener('click', () => {
                 modal.style.display = 'none';
                 form.reset();
-                this.selectedPriority = 'medium';
+                this.priority = 'medium';
             });
         }
 
@@ -383,15 +385,15 @@ class TaskManager {
             if (e.target === modal) {
                 modal.style.display = 'none';
                 form.reset();
-                this.selectedPriority = 'medium';
+                this.priority = 'medium';
             }
         });
 
-        document.querySelectorAll('.priority-option').forEach(option => {
-            option.addEventListener('click', () => {
-                document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                this.selectedPriority = option.dataset.priority;
+        document.querySelectorAll('.priority-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.priority-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                this.priority = opt.dataset.priority;
             });
         });
 
@@ -399,25 +401,26 @@ class TaskManager {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                const categorySelect = document.getElementById('taskCategory');
+                const cat = document.getElementById('taskCategory');
                 
-                this.addTask({
+                this.add({
                     title: document.getElementById('taskTitle').value,
                     dueDate: document.getElementById('taskDueDate').value,
-                    priority: this.selectedPriority,
-                    category: categorySelect ? categorySelect.value : 'work'
+                    priority: this.priority,
+                    category: cat ? cat.value : 'work'
                 });
                 
                 modal.style.display = 'none';
                 form.reset();
-                document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelectorAll('.priority-option').forEach(o => o.classList.remove('selected'));
                 document.querySelector('.priority-option[data-priority="medium"]').classList.add('selected');
-                this.selectedPriority = 'medium';
+                this.priority = 'medium';
             });
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// Start app when page loads
+window.addEventListener('load', function() {
     window.taskManager = new TaskManager();
 });
