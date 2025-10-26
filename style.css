@@ -1,4 +1,3 @@
-/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -11,14 +10,10 @@ body {
     color: #333333;
     line-height: 1.5;
 }
-
-/* Layout */
 .app-container {
     display: flex;
     min-height: 100vh;
 }
-
-/* Sidebar */
 .sidebar {
     width: 280px;
     background: #ffffff;
@@ -75,15 +70,11 @@ body {
     text-align: center;
     font-size: 16px;
 }
-
-/* Main Content */
 .main-content {
     margin-left: 280px;
     flex: 1;
     padding: 0;
 }
-
-/* Header */
 .page-header {
     background: white;
     padding: 24px 32px;
@@ -156,8 +147,6 @@ body {
 .add-task-btn:hover {
     background: #30B050;
 }
-
-/* Progress Section */
 .progress-section {
     background: white;
     margin: 24px 32px;
@@ -191,8 +180,6 @@ body {
     color: #333333;
     text-align: right;
 }
-
-/* Tasks Section */
 .tasks-section {
     margin: 0 32px 32px;
 }
@@ -341,8 +328,6 @@ body {
     background: #e6f3ff;
     color: #007AFF;
 }
-
-/* Simple Filter Tabs */
 .simple-filter-section {
     margin: 24px 32px;
 }
@@ -376,8 +361,6 @@ body {
 .filter-tab:hover:not(.active) {
     color: #333333;
 }
-
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -537,8 +520,6 @@ body {
 .btn-add:hover {
     background: #30B050;
 }
-
-/* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
@@ -577,8 +558,6 @@ body {
         padding: 24px;
     }
 }
-
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -594,7 +573,6 @@ body {
     animation: fadeIn 0.3s ease;
 }
 
-/* Utility Classes */
 .hidden {
     display: none !important;
 }
@@ -603,7 +581,6 @@ body {
     text-align: center;
 }
 
-/* Planned Page Styles */
 .date-group {
     margin-bottom: 32px;
 }
