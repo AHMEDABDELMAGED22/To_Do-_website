@@ -420,7 +420,6 @@ class TaskManager {
     }
 }
 
-// Start app when page loads
 window.addEventListener('load', function() {
     window.taskManager = new TaskManager();
 });
